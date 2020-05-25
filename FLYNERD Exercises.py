@@ -53,13 +53,12 @@ def title_retyping():   # declaration a "title_retyping" function
     print("\n", end="")
     chosen_series = input()
     series_rating()
-
 '''
 ListSeries = {
     "La casa de papel": "7/10",         #
     "Breaking Bad": "8/10",             #
     "Vikings": "6/10",                  # declaration of dictionary (dict) type object "ListSeries"
-    "Game of Thrones": "9/10",          #
+    "Game of Thrones": "9/10",          #ghjkkj
     "How I met your mother": "4/10",    #
     "Witcher": "3/10"  #
 }
