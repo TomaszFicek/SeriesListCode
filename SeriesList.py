@@ -53,22 +53,13 @@ def title_retyping():   # declaration a "title_retyping" function
     print("\n", end="")
     chosen_series = input()
     series_rating()
-'''
-ListSeries = {
-    "La casa de papel": "7/10",         #
-    "Breaking Bad": "8/10",             #
-    "Vikings": "6/10",                  # declaration of dictionary (dict) type object "ListSeries"
-    "Game of Thrones": "9/10",          #ghjkkj
-    "How I met your mother": "4/10",    #
-    "Witcher": "3/10"  #
-}
-'''
+
 
 def read_file_with_series(): # declaration of function for opening "txt" file with list of series and for creating...
     # ...dictionary (dict) object - keys of dict object are series titles and values of dict object are series ratings
 
     global ListSeries  # change LOCAL VARIABLE  to GLOBAL  variable
-    with open("C:\\Users\\ficekt\\Desktop\\SeriesList.txt", "r", encoding="utf-8") as SeriesListFile: # METHOD to OPEN..
+    with open("SeriesList.txt", "r", encoding="utf-8") as SeriesListFile: # METHOD to OPEN..
         # ..file "SeriesList.txt". As a argument of OPEN method are: first - file name + its filename extension; second.
         # ..-open file mode (r,w or a);then encoding type. Then after "as" word need to be declare HANDLE  to opened...
         # ...file (name if this HANDLE)
@@ -86,7 +77,7 @@ def read_file_with_series(): # declaration of function for opening "txt" file wi
 def write_to_file_title(): # function to write "series title" to txt file
     global title_entering
     print("Please, add your title of Series and its rating to the Series List")
-    with open("C:\\Users\\ficekt\\Desktop\\SeriesList.txt", "a", encoding="utf-8") as SeriesFile:
+    with open("SeriesList.txt", "a", encoding="utf-8") as SeriesFile:
         print("First, enter title of Series and click enter button")
         title_entering = input()
         print("You entered '{}' - type 'y' if entered title is correctly or type 'n' if you"
@@ -105,7 +96,7 @@ def write_to_file_title(): # function to write "series title" to txt file
 
 def write_to_file_rating(): # function to write "series rating" to txt file
     print("\nNow, please type rating of entered series - rate series from 1 to 10")
-    with open("C:\\Users\\ficekt\\Desktop\\SeriesList.txt", "a", encoding="utf-8") as SeriesFile:
+    with open("SeriesList.txt", "a", encoding="utf-8") as SeriesFile:
         try:
             rating_entering = int(input())
             if rating_entering in range(1, 11):
@@ -125,7 +116,7 @@ def write_to_file_rating(): # function to write "series rating" to txt file
 def rewrite_to_file_rating(): # function to REwrite "title rating" in the case when user enter a CHAR type value
     print("You mustn't rate series as a char type. You must give value from 1 to 10 range.")
     print("Enter rating correctly:")
-    with open("C:\\Users\\ficekt\\Desktop\\SeriesList.txt", "a", encoding="utf-8") as SeriesFile:
+    with open("SeriesList.txt", "a", encoding="utf-8") as SeriesFile:
         try:
             rating_entering = int(input())
             if rating_entering in range(1, 11):
