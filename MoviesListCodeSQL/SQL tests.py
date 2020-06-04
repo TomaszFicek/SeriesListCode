@@ -1,8 +1,6 @@
 import sqlite3
 import os
 
-
-
 def database_sql():
 
     global con
@@ -47,7 +45,8 @@ def movies_list_drawing():
         if len(i["Movie_title"]) > LongestMovieTitle:
             LongestMovieTitle = len(i["Movie_title"])
 
-    if LongestMovieTitle % 2 == 0:  #
+    print("\n", end="")
+    if LongestMovieTitle % 2 == 0:
         print("|{}Movies{}|".format(" " * int((LongestMovieTitle - 3) / 2), " " * int((LongestMovieTitle - 3) / 2 + 1)))
     else:
         print("|{}Movies{}|".format(" " * int((LongestMovieTitle - 3) / 2), " " * int((LongestMovieTitle - 3) / 2)))
@@ -61,6 +60,7 @@ def movies_list_drawing():
         else:
             print("{}{}{}".format("|" + str(i["id"]) + ".", " " + i["Movie_title"], " " *
                                   ((LongestMovieTitle + 3) - (len(i["Movie_title"]) + 4)) + "|"))
+    print("\n", end="")
 
 def wrtie_title():
     print("Please, add your title of Movie and its rating to the Series List")
@@ -75,11 +75,11 @@ def wrtie_title():
     elif a == "n":
         print("Enter title again:")
         title_entering_sql = input()
-        print("You added '{}' to the Series list".format(title_entering_sql.capitalize()))
+        print("You added '{}' to the Movies list".format(title_entering_sql.capitalize()))
     elif a != "y" or a != "n":
         print("Enter title again:")
         title_entering_sql = input()
-        print("You added '{}' to the Series list".format(title_entering_sql.capitalize()))
+        print("You added '{}' to the Movies list".format(title_entering_sql.capitalize()))
 
     write_rating()
 
@@ -91,15 +91,15 @@ def write_rating():
         rating_entering_sql = int(input())
         if rating_entering_sql in range(1, 11):
             print(
-                "You rated a '{}' series on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
-            print("\n")
+                "You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
+            print("\n", end="")
         else:
             print("Entered rating is out of range 1:10, please type value from 1 to 10")
             if rating_entering_sql in range(1, 11):
                 print(
                     "You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(),
                                                                      rating_entering_sql))
-                print("\n")
+                print("\n", end="")
             else:
                 write_rating()
 
@@ -118,13 +118,13 @@ def rewrite_rating():
         rating_entering_sql = int(input())
         if rating_entering_sql in range(1, 11):
             print("You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
-            print("\n")
+            print("\n", end="")
         else:
             print("Entered rating is out of range 1:10, please type value from 1 to 10")
             if rating_entering_sql in range(1,11):
                 print("You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(),
                                                                       rating_entering_sql))
-                print("\n")
+                print("\n", end="")
             else:
                 write_rating()
 
@@ -135,13 +135,43 @@ def rewrite_rating():
 def write_data_to_database():
 
     data_tuple = (None, title_entering_sql.capitalize(), rating_entering_sql)
-    print(data_tuple)
-    print(type(data_tuple))
 
     cur.execute("""INSERT INTO MoviesList (id, Movie_title, Rating) VALUES (?, ?, ?)""", (data_tuple))
     con.commit()
 
+def add_movie_rating():
 
+    print("Please, give a number of movie title from below table which you want check its rating and adding your rating")
+
+    movies_list_drawing()
+    try:
+        number_of_movie = input()
+
+        global con
+        con = sqlite3.connect('MoviesList_SQL.db')
+        con.row_factory = sqlite3.Row
+        global cur
+        cur = con.cursor()
+
+        cur.execute(""" SELECT id, Movie_title, Rating FROM MoviesList """)
+        movie_id = cur.fetchall()
+
+        if int(number_of_movie) in range(1, len(movie_id) + 1):
+            for i in movie_id:
+                if int(number_of_movie) == i["id"]:
+                    print("You pick {} movie and its rating is {}".format(i["Movie_title"], i["Rating"]))
+        else:
+            print("Entered film number there isn't on movies list")
+            add_movie_rating()
+    except ValueError:
+        print("You must give a number, not a char type value")
+        add_movie_rating()
+
+
+add_movie_rating()
+
+
+"""
 if os.path.isfile("MoviesList_SQL.db"):
     print("true")
     movies_list_drawing()
@@ -150,12 +180,11 @@ else:
     database_sql()
     movies_list_drawing()
 
-
 wrtie_title()
 
 write_data_to_database()
 
-"""
+
 
 """
 
