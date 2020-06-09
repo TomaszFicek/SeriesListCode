@@ -1,7 +1,46 @@
-                     (None, "The Pianist", 8),
-                     (None, "Joker", 8),
-                     (None, "Braveheart", 7),
-                     (None, "IronMan", 6),
-                     (None, "Ice Age", 5),
-                     (None, "American Sniper", 6),
-                     (None, "Madagascar", 4),
+def write_rating(rating_entering_sql, title_entering_sql, write_rating, rewrite_rating):
+
+    rating_entering_sql
+    print("\nNow, please type rating of entered Movie - rate Movie from 1 to 10")
+    try:
+        rating_entering_sql = int(input())
+        if rating_entering_sql in range(1, 11):
+            print(
+                "You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
+            print("\n", end="")
+        else:
+            print("Entered rating is out of range 1:10, please type value from 1 to 10")
+            if rating_entering_sql in range(1, 11):
+                print(
+                    "You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(),
+                                                                     rating_entering_sql))
+                print("\n", end="")
+            else:
+                write_rating()
+
+    except ValueError:
+        rewrite_rating()
+#############################################
+
+def rewrite_rating(rating_entering_sql, title_entering_sql, write_rating):
+
+
+    rating_entering_sql
+    print("You mustn't rate movie as a char type. You must give value from 1 to 10 range.")
+    print("Enter rating correctly:")
+    try:
+        rating_entering_sql = int(input())
+        if rating_entering_sql in range(1, 11):
+            print("You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
+            print("\n", end="")
+        else:
+            print("Entered rating is out of range 1:10, please type value from 1 to 10")
+            if rating_entering_sql in range(1, 11):
+                print("You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(),
+                                                                      rating_entering_sql))
+                print("\n", end="")
+            else:
+                write_rating(rating_entering_sql, title_entering_sql, write_rating, rewrite_rating)
+
+    except ValueError:
+        rewrite_rating(rating_entering_sql, title_entering_sql, write_rating)
