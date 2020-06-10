@@ -113,6 +113,7 @@ def write_rating(rating_entering_sql, title_entering_sql, write_rating, rewrite_
         if rating_entering_sql in range(1, 11):
             print(
                 "You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
+            print("*****************************************************************")
             first_variable = rating_entering_sql
 
             print("\n", end="")
@@ -122,6 +123,7 @@ def write_rating(rating_entering_sql, title_entering_sql, write_rating, rewrite_
                 print(
                     "You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(),
                                                                     rating_entering_sql))
+                print("*****************************************************************")
                 first_variable = rating_entering_sql
                 print("\n", end="")
             else:
@@ -140,6 +142,7 @@ def rewrite_rating(rating_entering_sql, title_entering_sql, write_rating):
         rating_entering_sql = int(input())
         if rating_entering_sql in range(1, 11):
             print("You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(), rating_entering_sql))
+            print("*****************************************************************")
             first_variable = rating_entering_sql
             print("\n", end="")
         else:
@@ -147,6 +150,7 @@ def rewrite_rating(rating_entering_sql, title_entering_sql, write_rating):
             if rating_entering_sql in range(1, 11):
                 print("You rated a '{}' movie on {}/10 rating".format(title_entering_sql.capitalize(),
                                                                       rating_entering_sql))
+                print("*****************************************************************")
                 first_variable = rating_entering_sql
                 print("\n", end="")
             else:
@@ -170,9 +174,11 @@ def write_data_to_database():
 
 def add_movie_rating():
 
+    print("=" * 108)
     print("\nPlease, give a number of movie title from below table which you want check its rating and adding your rating")
 
     movies_list_drawing()
+    print("Firstly, check rating of movies from table by enter number of this film")
     try:
         number_of_movie = input()
 
@@ -190,30 +196,88 @@ def add_movie_rating():
                 if int(number_of_movie) == i["id"]:
                     print("You pick '{}' movie and its rating is {}/10".format(i["Movie_title"], i["Rating"]))
 
-                    rating_entering_sql_2 = 0
-                    write_rating(rating_entering_sql_2, i["Movie_title"], write_rating,
-                                 rewrite_rating)
+                    your_rating_entering_sql = 0
+                    write_rating(your_rating_entering_sql, i["Movie_title"], write_rating, rewrite_rating)
+
+                    cur.execute(""" SELECT Rating_amount FROM  AmountMovieRating WHERE id_ = ?; """, (i["id"],))
+                    rating_amount = cur.fetchone()[0]
+                    rating_amount_increment = rating_amount + 1
+                    movie_rating_update = (first_variable + i["Rating"]) / rating_amount_increment
+                    movie_rating_update = round(movie_rating_update, 2)
+                    print("Thank you !\nNow '{}' movie has {}/10 rating" .format(i["Movie_title"], movie_rating_update))
+                    print("*****************************************************************")
+
+                    cur.execute(""" UPDATE MoviesList SET Rating = ? WHERE Movie_title = ?""",
+                                (movie_rating_update, i["Movie_title"]))
+
+                    cur.execute(""" UPDATE AmountMovieRating SET Rating_amount = ? WHERE id_ = ? """,
+                                (rating_amount_increment, i["id"]))
+
+                    con.commit()
+
                     return
         else:
             print("Entered film number there isn't on movies list")
             add_movie_rating()
     except ValueError:
-        print("You must give a number, not a char type value")
+        print("!!!  You must give a number, not a char type value  !!!")
         add_movie_rating()
 
 
-if os.path.isfile("MoviesList_SQL.db"):
-    movies_list_drawing()
-else:
-    database_sql()
-    movies_list_drawing()
+def select_scenario_fun():
 
-wrtie_title()
+    try:
+        select_scenario_var = int(input())
+        while select_scenario_var not in range(1, 3):
+            print("Sorry, you can only press '1' or '2'\nPlease, press '1' or '2' button on keyboard")
+            select_scenario_var = int(input())
 
-write_data_to_database()
+        if select_scenario_var == 1:
+            wrtie_title()
+            write_data_to_database()
 
-add_movie_rating() # should be change function inside a "add_movie_rating" (from "write-rating" to the new one which
-# UPDATE database)
+            print("\nDo you wanna continue work with app ? If yes press 'y' button, if no press'n' button")
+            if input() == "y":
+                movie_app_introduction()
+            else:
+                app_closing()
+
+        else:
+            add_movie_rating()
+
+            print("\nDo you wanna continue work with app ? If yes press 'y' button, if no press'n' button")
+            if input() == "y":
+                movie_app_introduction()
+            else:
+                app_closing()
+
+    except ValueError:
+        print("You have to press '1' or '2' button - NOT CHAR SIGN !!!")
+        select_scenario_fun()
 
 
+def movie_app_introduction():
+
+    print("\nHello there :)\nThis is a application with list of Movies.\nYou can add your films and their ratings to"
+          " this list or check films ratings of movies from exists movie list.\nHave fun :)\n ")
+    print("Do you wanna add new film and its rating to below list or check rating of film from below movie list and"
+          " add to it your rating ?")
+
+    if os.path.isfile("MoviesList_SQL.db"):
+        movies_list_drawing()
+    else:
+        database_sql()
+        movies_list_drawing()
+
+    print("If you wanna add new movie to list press '1' or if you wanna check rating and add your to exist film"
+          " press '2'")
+
+    select_scenario_fun()
+
+
+def app_closing():
+
+    return 0
+
+movie_app_introduction()
 
